@@ -19,6 +19,7 @@ half4 _BaseColor;
 half4 _SpecColor;
 half4 _EmissionColor;
 float _Extrusion;
+float _TopSize;
 half _Cutoff;
 half _Smoothness;
 half _Metallic;

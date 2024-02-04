@@ -5,6 +5,7 @@ Shader "Custom/ExtrusionLit"
         // Specular vs Metallic workflow
         _WorkflowMode("WorkflowMode", Float) = 1.0
         _Extrusion("Extrusion", Float) = 1.0
+        _TopSize("Top size", Float) = 1.0
 
         [MainTexture] _BaseMap("Albedo", 2D) = "white" {}
         [MainColor] _BaseColor("Color", Color) = (1,1,1,1)
@@ -194,10 +195,11 @@ Shader "Custom/ExtrusionLit"
             #pragma multi_compile_vertex _ _CASTING_PUNCTUAL_LIGHT_SHADOW
 
             #pragma vertex ShadowPassVertex
+            #pragma geometry ShadowPassGeometry
             #pragma fragment ShadowPassFragment
 
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/Shaders/ShadowCasterPass.hlsl"
+            #include "ExtrusionInput.hlsl"
+            #include "ExtrusionShadowPass.hlsl"
             ENDHLSL
         }
 

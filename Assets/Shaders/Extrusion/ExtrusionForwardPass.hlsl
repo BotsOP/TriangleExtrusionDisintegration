@@ -220,7 +220,7 @@ GeometryOutput VaryingsToGeometry(Varyings input)
     return output;
 }
 
-void CalculateNormalAndTangent(float3 v1, float3 v2, float3 v3, out float3 normal, out float4 tangent)
+void CalculateNormalTangentUV(float3 v1, float3 v2, float3 v3, out float3 normal, out float4 tangent)
 {
     float3 edge1 = v2 - v1;
     float3 edge2 = v3 - v1;
@@ -249,6 +249,10 @@ void LitPassGeometry(triangle Varyings inputs[3], inout TriangleStream<GeometryO
     baseVertex4.positionOS = baseVertex1.positionOS + avgNormal * _Extrusion;
     baseVertex5.positionOS = baseVertex2.positionOS + avgNormal * _Extrusion;
     baseVertex6.positionOS = baseVertex3.positionOS + avgNormal * _Extrusion;
+    float4 avgTopPos = (baseVertex4.positionOS + baseVertex5.positionOS + baseVertex6.positionOS) / 3;
+    baseVertex4.positionOS = lerp(avgTopPos, baseVertex4.positionOS, _TopSize);
+    baseVertex5.positionOS = lerp(avgTopPos, baseVertex5.positionOS, _TopSize);
+    baseVertex6.positionOS = lerp(avgTopPos, baseVertex6.positionOS, _TopSize);
 
     GeometryOutput outputVertex4 = VaryingsToGeometry(baseVertex4);
     GeometryOutput outputVertex5 = VaryingsToGeometry(baseVertex5);
@@ -269,6 +273,28 @@ void LitPassGeometry(triangle Varyings inputs[3], inout TriangleStream<GeometryO
     outputStream.RestartStrip();
 
     //Extrusion face 1
+    float3 normal;
+    float4 tangent;
+    CalculateNormalTangentUV(baseVertex2.positionOS, baseVertex1.positionOS, baseVertex5.positionOS, normal, tangent);
+    
+    baseVertex2.normalOS = normal;
+    baseVertex2.tangentOS = tangent;
+    baseVertex1.normalOS = normal;
+    baseVertex1.tangentOS = tangent;
+    baseVertex5.normalOS = normal;
+    baseVertex5.tangentOS = tangent;
+    baseVertex4.normalOS = normal;
+    baseVertex4.tangentOS = tangent;
+
+    baseVertex1.texcoord = float2(0, 0);
+    baseVertex2.texcoord = float2(1, 0);
+    baseVertex4.texcoord = float2(0, 1);
+    baseVertex5.texcoord = float2(1, 1);
+
+    outputVertex1 = VaryingsToGeometry(baseVertex1);
+    outputVertex2 = VaryingsToGeometry(baseVertex2);
+    outputVertex4 = VaryingsToGeometry(baseVertex4);
+    outputVertex5 = VaryingsToGeometry(baseVertex5);
     
     outputStream.Append(outputVertex2);
     outputStream.Append(outputVertex1);
@@ -281,10 +307,7 @@ void LitPassGeometry(triangle Varyings inputs[3], inout TriangleStream<GeometryO
     outputStream.RestartStrip();
     
     //Extrusion face 2
-
-    float3 normal;
-    float4 tangent;
-    CalculateNormalAndTangent(baseVertex3.positionOS, baseVertex2.positionOS, baseVertex6.positionOS, normal, tangent);
+    CalculateNormalTangentUV(baseVertex3.positionOS, baseVertex2.positionOS, baseVertex6.positionOS, normal, tangent);
     
     baseVertex2.normalOS = normal;
     baseVertex2.tangentOS = tangent;
@@ -294,11 +317,14 @@ void LitPassGeometry(triangle Varyings inputs[3], inout TriangleStream<GeometryO
     baseVertex5.tangentOS = tangent;
     baseVertex6.normalOS = normal;
     baseVertex6.tangentOS = tangent;
+    
+    baseVertex2.texcoord = float2(0, 0);
+    baseVertex3.texcoord = float2(1, 0);
+    baseVertex5.texcoord = float2(0, 1);
+    baseVertex6.texcoord = float2(1, 1);
 
-    outputVertex1 = VaryingsToGeometry(baseVertex1);
     outputVertex2 = VaryingsToGeometry(baseVertex2);
     outputVertex3 = VaryingsToGeometry(baseVertex3);
-    outputVertex4 = VaryingsToGeometry(baseVertex4);
     outputVertex5 = VaryingsToGeometry(baseVertex5);
     outputVertex6 = VaryingsToGeometry(baseVertex6);
     
@@ -314,7 +340,7 @@ void LitPassGeometry(triangle Varyings inputs[3], inout TriangleStream<GeometryO
     
     //Extrusion face 3
 
-    CalculateNormalAndTangent(baseVertex1.positionOS, baseVertex3.positionOS, baseVertex4.positionOS, normal, tangent);
+    CalculateNormalTangentUV(baseVertex1.positionOS, baseVertex3.positionOS, baseVertex4.positionOS, normal, tangent);
     
     baseVertex1.normalOS = normal;
     baseVertex1.tangentOS = tangent;
@@ -325,11 +351,14 @@ void LitPassGeometry(triangle Varyings inputs[3], inout TriangleStream<GeometryO
     baseVertex6.normalOS = normal;
     baseVertex6.tangentOS = tangent;
 
+    baseVertex1.texcoord = float2(0, 0);
+    baseVertex3.texcoord = float2(1, 0);
+    baseVertex4.texcoord = float2(0, 1);
+    baseVertex6.texcoord = float2(1, 1);
+
     outputVertex1 = VaryingsToGeometry(baseVertex1);
-    outputVertex2 = VaryingsToGeometry(baseVertex2);
     outputVertex3 = VaryingsToGeometry(baseVertex3);
     outputVertex4 = VaryingsToGeometry(baseVertex4);
-    outputVertex5 = VaryingsToGeometry(baseVertex5);
     outputVertex6 = VaryingsToGeometry(baseVertex6);
     
     outputStream.Append(outputVertex1);

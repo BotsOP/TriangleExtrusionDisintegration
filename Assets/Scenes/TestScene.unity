@@ -665,7 +665,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 926983379}
   m_LocalRotation: {x: -0.10491841, y: 0.818435, z: -0.1579897, w: -0.54239804}
-  m_LocalPosition: {x: -0.488, y: 1.87, z: 0.209}
+  m_LocalPosition: {x: -0.488, y: 1.87, z: 0.056}
   m_LocalScale: {x: 0.47851, y: 0.47851, z: 0.47851}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -925,7 +925,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   material: {fileID: 2100000, guid: 006d33a6f6ee7204497be50c4d1842c4, type: 2}
-  extrusion: -0.5
+  extrusion: -0.412
+  topSize: 0
 --- !u!4 &2132398718
 Transform:
   m_ObjectHideFlags: 0
